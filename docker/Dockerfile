@@ -1,5 +1,8 @@
 FROM nvidia/cuda:11.3.1-devel-ubuntu20.04
 
+#修改dockerfile可以在build时使用apt清华源
+
+ADD sources.list /etc/apt/
 ENV PROJECT=vidar
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -20,7 +23,8 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get install -y python3-pip
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN pip install --upgrade pip
-
+#更换pip源为清华源
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 # Install pytorch
 RUN pip install  \
     torch==${PYTORCH_VERSION} \
@@ -39,13 +43,14 @@ RUN apt-get install -y \
     tmux
 
 # Install extra packages (pip)
-RUN pip install                 \
+RUN pip install                 \                     
     tqdm==4.61.0                \
     boto3==1.17.83              \
     termcolor==1.1.0            \
-    pyyaml==5.4.1               \
+    pyyaml==6.0.1               \
     wandb==0.10.31              \
-    opencv-python==4.5.2.52     \
+    numpy==1.22.1               \
+    opencv-python==4.5.3.56     \
     flow_vis==0.1               \
     matplotlib==3.3.4           \
     fire==0.4.0                 \
